@@ -4,7 +4,7 @@
 <!-- Page Content -->
   <div class="container intro-container">
   
-    <global-home></global-home>
+   
     <div class="row">
 
       <!-- Blog Entries Column -->
@@ -16,7 +16,7 @@
 
         <!-- Blog Post -->
 
-<Home></Home>
+<global-home></global-home>
 
         <!-- Pagination -->
         <nav aria-label="...">

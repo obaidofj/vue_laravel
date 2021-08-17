@@ -22,6 +22,7 @@ class PostController extends Controller
         ->join('users', 'posts.user_id', '=', 'users.id')
         ->select('posts.*','users.name')
         ->get();
+        
         return response::json($posts);
     }
 
@@ -54,7 +55,41 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+
+ return response::json([
+            'id'=>$post->id,
+            'slug'=>$post->slug,
+            'image'=>$post->image,
+             'user'=>$post->user->name,
+             'body'=>$post->body,
+             'title'=>$post->title,
+             'comments'=>$post->comments,
+                'comments_count'=>$post->comments->count(),
+                'category'=>$post->category->name,
+
+        ]);
+        
+        /* return response::json([
+            'id'=>$post->id,
+            'slug'=>$post->slug,
+            'body'=>$post->body,
+            'added_at'=>$post->created_at->diffForHumans(),
+            'comments_count'=>$post->comments->count(),
+            'image'=>$post->image,
+            'user'=>$post->user,
+            'title'=>$post->title,
+            'category'=>$post->category,
+            'comments'=>$post->comments->map(function ($comment) {
+                return [
+                    'id'=>$comment->id,
+                    'body'=>$comment->body,
+                    'user'=>$comment->user,
+                    'added_at'=>$comment->created_at->diffForHumans()
+                ];
+            })
+
+           // 'comments'=>$this->commentsFormatted($post->comments) 
+        ]); */
     }
 
     /**

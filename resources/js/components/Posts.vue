@@ -3,7 +3,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8" v-for="post in posts" :key="post.id">
                <img :src="'img/'+post.image" width="100" >
-<a :href="'/post/'+post.slug">{{post.title}}</a>
+<router-link :to="'/post/'+post.slug">{{post.title}}</router-link>
 {{post.body.substr(0,150)}}
 posted by : {{post.name}}
             </div>
