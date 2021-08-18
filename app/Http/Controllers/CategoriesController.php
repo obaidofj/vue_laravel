@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categories;
 use Illuminate\Http\Request;
+use Response;
 
 class CategoriesController extends Controller
 {
@@ -15,6 +16,9 @@ class CategoriesController extends Controller
     public function index()
     {
         //
+        $categories=Categories::factory()->hasPosts()->get();
+
+        return response::json($categories);
     }
 
     /**

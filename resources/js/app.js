@@ -21,6 +21,7 @@ window.Vue = require('vue').default;
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('Posts', require('./components/Posts.vue'));
+Vue.component('Categories', require('./components/Categories.vue'));
 Vue.component('global-home', require('./components/GlobalHome.vue').default);
 
 /**

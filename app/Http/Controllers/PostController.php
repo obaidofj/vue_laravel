@@ -17,11 +17,11 @@ class PostController extends Controller
     public function index()
     {
         //
-        //$posts=Post::latest()->get();
-        $posts=DB::table('posts')
+        $posts=Post::latest()->with('user','category')->get();
+       /*  $posts=DB::table('posts')
         ->join('users', 'posts.user_id', '=', 'users.id')
         ->select('posts.*','users.name')
-        ->get();
+        ->get(); */
         
         return response::json($posts);
     }
