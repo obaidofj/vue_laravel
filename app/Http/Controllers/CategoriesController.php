@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categories;
+use App\Models\User;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Response;
 
@@ -16,7 +18,7 @@ class CategoriesController extends Controller
     public function index()
     {
         //
-        $categories=Categories::factory()->hasPosts()->get();
+        $categories=Categories::has('posts')->get();
 
         return response::json($categories);
     }
