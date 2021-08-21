@@ -1882,8 +1882,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios.get("http://127.0.0.1:8000/api/categories").then(function (res) {
-        _this.categories = res.data;
-        console.log("categories:", res.data);
+        _this.categories = res.data; //console.log("categories:",res.data);
       })["catch"](function (err) {
         return console.log(err);
       });
@@ -1905,6 +1904,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Categories_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Categories.vue */ "./resources/js/components/Categories.vue");
+/* harmony import */ var _routes_routes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../routes/routes */ "./resources/js/routes/routes.js");
 //
 //
 //
@@ -1950,6 +1950,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
     categories: _Categories_vue__WEBPACK_IMPORTED_MODULE_0__.default
@@ -1960,7 +1961,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
-    console.log('Component mounted.');
+    //console.log('Component mounted.')
     this.getPosts();
   },
   methods: {
@@ -1973,6 +1974,17 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (err) {
         return console.log(err);
       });
+    },
+    routerPush: function routerPush(path) {
+      if (this.$route.path !== path) {
+        this.$router.push(path);
+      }
+    }
+  },
+  watch: {
+    $route: function $route(to, from) {
+      //console.log("changeed"); 
+      this.routerPush(to.path);
     }
   }
 });
@@ -2077,8 +2089,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios.get("/api/posts/" + this.$route.params.slug).then(function (res) {
-        _this.post = res.data;
-        console.log(res);
+        _this.post = res.data; //console.log(res)
       })["catch"](function (err) {
         return console.log(err);
       });
@@ -2144,6 +2155,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
@@ -2151,20 +2163,47 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      posts: {}
+      posts: {},
+      issearching: false,
+      postsearch: ''
     };
   },
   mounted: function mounted() {
-    console.log('Component mounted.');
-    this.getPosts();
+    //console.log('Component mounted.')
+    if (this.$route.path == '/category/' + this.$route.params.slug + '/posts') this.getPosts2();else this.getPosts();
+  },
+  watch: {
+    postsearch: function postsearch(query) {
+      var _this = this;
+
+      if (query.length > 0) {
+        //console.log(query);
+        axios.get('/api/searchposts/' + query).then(function (res) {
+          console.log(res.data);
+          _this.posts = res.data;
+        })["catch"](function (err) {
+          return console.log(err);
+        });
+      } // else if(this.$route.path=='/category/'+this.$route.params.slug+'/posts')
+      // this.getPosts2();
+      else this.getPosts();
+    }
   },
   methods: {
     getPosts: function getPosts() {
-      var _this = this;
+      var _this2 = this;
 
-      axios.get('api/posts').then(function (res) {
-        _this.posts = res.data;
-        console.log(res.data);
+      axios.get('/api/posts').then(function (res) {
+        _this2.posts = res.data; //console.log(res.data)
+      }).then(function (err) {
+        return console.log(err);
+      });
+    },
+    getPosts2: function getPosts2() {
+      var _this3 = this;
+
+      axios.get('/api/category/' + this.$route.params.slug + '/posts').then(function (res) {
+        _this3.posts = res.data; //console.log("category posts",res.data)
       }).then(function (err) {
         return console.log(err);
       });
@@ -2316,9 +2355,10 @@ var routes = [{
   name: 'PostDetails'
 }, {
   path: '/category/:slug/posts',
-  component: _components_CategoryPosts_vue__WEBPACK_IMPORTED_MODULE_4__.default,
-  name: 'CategoryPosts'
-}, {
+  component: _components_Posts_vue__WEBPACK_IMPORTED_MODULE_2__.default,
+  name: 'CatPosts'
+}, // { path: '/category/:slug/posts', component: CategoryPosts, name: 'CategoryPosts'  },
+{
   path: '/admin',
   component: _components_admin_AdminIndex_vue__WEBPACK_IMPORTED_MODULE_5__.default,
   name: 'AdminIndex'
@@ -38253,7 +38293,7 @@ var render = function() {
                         _c(
                           "router-link",
                           {
-                            attrs: { to: "./category/" + catg.slug + "/posts" }
+                            attrs: { to: "/category/" + catg.slug + "/posts" }
                           },
                           [_vm._v(_vm._s(catg.name) + " ")]
                         )
@@ -38309,7 +38349,7 @@ var render = function() {
                 { key: post.id, staticClass: "col-md-8" },
                 [
                   _c("img", {
-                    attrs: { src: "img/" + post.image, width: "100" }
+                    attrs: { src: "/img/" + post.image, width: "100" }
                   }),
                   _vm._v(" "),
                   _c("router-link", { attrs: { to: "/post/" + post.slug } }, [
@@ -38439,7 +38479,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_c("router-view")], 1)
+  return _c("div", [_c("router-view", { key: _vm.$route.path })], 1)
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -38476,9 +38516,12 @@ var render = function() {
               ])
             : _vm._e(),
           _vm._v(" "),
-          _c("img", { attrs: { src: "img/" + _vm.post.image, width: "100" } }),
+          _c("br"),
+          _c("br"),
           _vm._v(" "),
-          _c("a", { attrs: { href: "/post/" + _vm.post.slug } }, [
+          _c("img", { attrs: { src: "/img/" + _vm.post.image, width: "100" } }),
+          _vm._v(" "),
+          _c("router-link", { attrs: { to: "/post/" + _vm.post.slug } }, [
             _vm._v(_vm._s(_vm.post.title))
           ]),
           _vm._v(
@@ -38535,6 +38578,8 @@ var render = function() {
           _c("br"),
           _c("br"),
           _vm._v(" "),
+          _vm.issearching ? _c("div", [_vm._v("searching..")]) : _vm._e(),
+          _vm._v(" "),
           _c(
             "div",
             { staticClass: "row justify-content-center" },
@@ -38544,7 +38589,7 @@ var render = function() {
                 { key: post.id, staticClass: "col-md-8" },
                 [
                   _c("img", {
-                    attrs: { src: "img/" + post.image, width: "100" }
+                    attrs: { src: "/img/" + post.image, width: "100" }
                   }),
                   _vm._v(" "),
                   _c("router-link", { attrs: { to: "/post/" + post.slug } }, [
@@ -38571,7 +38616,41 @@ var render = function() {
       _c(
         "div",
         { staticClass: "col-md-4" },
-        [_vm._m(0), _vm._v(" "), _c("categories")],
+        [
+          _c("div", { staticClass: "card my-4" }, [
+            _c("h5", { staticClass: "card-header" }, [_vm._v("Search")]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-body" }, [
+              _c("div", { staticClass: "input-group" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.postsearch,
+                      expression: "postsearch"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "text", placeholder: "Search for..." },
+                  domProps: { value: _vm.postsearch },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.postsearch = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm._m(0)
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("categories")
+        ],
         1
       )
     ])
@@ -38582,25 +38661,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card my-4" }, [
-      _c("h5", { staticClass: "card-header" }, [_vm._v("Search")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-body" }, [
-        _c("div", { staticClass: "input-group" }, [
-          _c("input", {
-            staticClass: "form-control",
-            attrs: { type: "text", placeholder: "Search for..." }
-          }),
-          _vm._v(" "),
-          _c("span", { staticClass: "input-group-btn" }, [
-            _c(
-              "button",
-              { staticClass: "btn btn-secondary", attrs: { type: "button" } },
-              [_vm._v("Go!")]
-            )
-          ])
-        ])
-      ])
+    return _c("span", { staticClass: "input-group-btn" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-secondary", attrs: { type: "button" } },
+        [_vm._v("Go!")]
+      )
     ])
   }
 ]

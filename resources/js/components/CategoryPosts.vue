@@ -8,7 +8,7 @@
         <br><br>
         <div class="row justify-content-center">
             <div class="col-md-8" v-for="post in posts" :key="post.id">
-               <img :src="'img/'+post.image" width="100" >
+               <img :src="'/img/'+post.image" width="100" >
 <router-link :to="'/post/'+post.slug">{{post.title}}</router-link>
 {{post.body.substr(0,150)}}
 posted by : {{post.user.name}} category: {{post.category.name}}
@@ -44,6 +44,7 @@ posted by : {{post.user.name}} category: {{post.category.name}}
 
 <script>
 import categories from './Categories.vue' ;
+import router from '../routes/routes';
 
     export default {
   components: { categories },
@@ -51,7 +52,7 @@ import categories from './Categories.vue' ;
 return { posts: {} }
         },
         mounted() {
-            console.log('Component mounted.')
+           //console.log('Component mounted.')
             this.getPosts();
         },
         methods:{
@@ -59,7 +60,18 @@ return { posts: {} }
                 axios.get('/api/category/'+this.$route.params.slug+'/posts')
                 .then(res=>{this.posts=res.data; console.log("category posts",res.data)})
                 .then(err=>console.log(err));
-            }
-        }
+            },
+            routerPush(path) {
+  if (this.$route.path !== path) {
+    this.$router.push(path);
+  }
+}
+        },
+        watch: {
+    $route(to, from) {
+      //console.log("changeed"); 
+      this.routerPush(to.path);
+    }
+  }
     }
 </script>

@@ -11,7 +11,8 @@ import AdminIndex from '../components/admin/AdminIndex.vue';
 const routes = [
     { path: '/', component: Posts, name: 'Posts' },
     { path: '/post/:slug', component: PostDetails, name: 'PostDetails' },
-    { path: '/category/:slug/posts', component: CategoryPosts, name: 'CategoryPosts' },
+    { path: '/category/:slug/posts', component: Posts, name: 'CatPosts'  },
+    // { path: '/category/:slug/posts', component: CategoryPosts, name: 'CategoryPosts'  },
     { path: '/admin', component: AdminIndex, name: 'AdminIndex' }
 ];
 

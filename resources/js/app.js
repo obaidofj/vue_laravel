@@ -34,4 +34,5 @@ import routes from './routes/routes';
 const app = new Vue({
     el: '#app',
     router:routes
+    
 });

@@ -8,7 +8,7 @@
               <div class="col-lg-6">
                 <ul class="list-unstyled mb-0" v-if="categories.length>0">
                   <li v-for="catg in categories" :key="catg.id">
-                    <router-link :to="'./category/'+catg.slug+'/posts'">{{catg.name}} </router-link>
+                    <router-link :to="'/category/'+catg.slug+'/posts'">{{catg.name}} </router-link>
                   </li>
                
                 </ul>
@@ -36,7 +36,8 @@ export default {
     methods:{
         getCategories(){
             axios.get("http://127.0.0.1:8000/api/categories")
-            .then(res=>{this.categories=res.data; console.log("categories:",res.data);})
+            .then(res=>{this.categories=res.data; //console.log("categories:",res.data);
+            })
             .catch(err=>console.log(err));
             
         }

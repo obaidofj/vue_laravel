@@ -6,9 +6,10 @@
       <div class="col-md-8">
     <div class="container">
         <br><br>
+        <div v-if="issearching">searching..</div>
         <div class="row justify-content-center">
             <div class="col-md-8" v-for="post in posts" :key="post.id">
-               <img :src="'img/'+post.image" width="100" >
+               <img :src="'/img/'+post.image" width="100" >
 <router-link :to="'/post/'+post.slug">{{post.title}}</router-link>
 {{post.body.substr(0,150)}}
 posted by : {{post.user.name}} category: {{post.category.name}}
@@ -25,7 +26,7 @@ posted by : {{post.user.name}} category: {{post.category.name}}
           <h5 class="card-header">Search</h5>
           <div class="card-body">
             <div class="input-group">
-              <input type="text" class="form-control" placeholder="Search for...">
+              <input type="text" class="form-control" placeholder="Search for..." v-model="postsearch">
               <span class="input-group-btn">
                 <button class="btn btn-secondary" type="button">Go!</button>
               </span>
@@ -48,18 +49,46 @@ import categories from './Categories.vue' ;
     export default {
   components: { categories },
         data(){
-return { posts: {} }
+return { posts: {},
+         issearching:false,
+         postsearch:'' }
         },
         mounted() {
-            console.log('Component mounted.')
+            //console.log('Component mounted.')
+            if(this.$route.path=='/category/'+this.$route.params.slug+'/posts')
+            this.getPosts2();
+            else
             this.getPosts();
+        },
+        watch:{
+          postsearch(query){
+            if(query.length>0)
+            {
+            //console.log(query);
+            axios.get('/api/searchposts/'+query)
+            .then(res=>{console.log(res.data); this.posts=res.data;})
+            .catch(err=>console.log(err));
+            }
+            // else if(this.$route.path=='/category/'+this.$route.params.slug+'/posts')
+            // this.getPosts2();
+            else
+             this.getPosts();
+          }
         },
         methods:{
             getPosts(){
-                axios.get('api/posts')
-                .then(res=>{this.posts=res.data; console.log(res.data)})
+                axios.get('/api/posts')
+                .then(res=>{this.posts=res.data; //console.log(res.data)
+                })
+                .then(err=>console.log(err));
+            },
+            getPosts2(){
+                axios.get('/api/category/'+this.$route.params.slug+'/posts')
+                .then(res=>{this.posts=res.data; //console.log("category posts",res.data)
+                           })
                 .then(err=>console.log(err));
             }
+
         }
     }
 </script>

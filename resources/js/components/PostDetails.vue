@@ -2,8 +2,8 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8"><div v-if="post.category[name]" align="right">{{post.category[name]}}</div>
-               <img :src="'img/'+post.image" width="100" >
-<a :href="'/post/'+post.slug">{{post.title}}</a>
+              <br><br> <img :src="'/img/'+post.image" width="100" >
+<router-link :to="'/post/'+post.slug">{{post.title}}</router-link>
 {{post.body}}
 posted by : {{post.user.name}}
 <div v-if="post.comments_count>0"> {{post.comments_count}} Comments:</div>
@@ -27,7 +27,8 @@ return { post: '' }
         methods:{
             getPost(){
                 axios.get("/api/posts/"+this.$route.params.slug)
-                .then(res=>{this.post=res.data; console.log(res)})
+                .then(res=>{this.post=res.data; //console.log(res)
+                })
                 .catch(err=>console.log(err));
             }
         }
