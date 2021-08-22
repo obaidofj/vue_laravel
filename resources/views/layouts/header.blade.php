@@ -23,8 +23,8 @@
           <li class="nav-item register-btn reg-login-btn" data-toggle="modal" data-target="#register-modal">
             <a class="btn btn-info nav-link" href="" data-toggle="modal" data-target="#register-modal">Register</a>
           </li>
-          <li class="nav-item reg-login-btn" data-toggle="modal" data-target="#login-modal">
-            <a class="btn btn-primary text-weight nav-link" href="#">login</a>
+          <li class="nav-item reg-login-btn"  data-toggle="modal" data-target="#login-modal">
+            <a class="btn btn-primary text-weight nav-link"  data-toggle="modal" href="#" data-target="#login-modal">login</a>
           </li>
         </ul>
       </div>

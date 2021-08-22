@@ -22,7 +22,11 @@ window.Vue = require('vue').default;
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('Posts', require('./components/Posts.vue'));
 Vue.component('Categories', require('./components/Categories.vue'));
+Vue.component('register', require('./components/Register.vue').default);
+Vue.component('login', require('./components/Login.vue').default);
+Vue.component('test', require('./components/Test.vue'));
 Vue.component('global-home', require('./components/GlobalHome.vue').default);
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

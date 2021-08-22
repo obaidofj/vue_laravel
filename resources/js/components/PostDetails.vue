@@ -5,7 +5,7 @@
               <br><br> <img :src="'/img/'+post.image" width="100" >
 <router-link :to="'/post/'+post.slug">{{post.title}}</router-link>
 {{post.body}}
-posted by : {{post.user.name}}
+posted by : {{post.user}}
 <div v-if="post.comments_count>0"> {{post.comments_count}} Comments:</div>
 <div v-for="comment in post.comments" :key="comment.id">
 {{comment.body}}

@@ -4,5 +4,4 @@
 <!-- Page Content --> 
  <global-home></global-home>
  
- 
 @endsection

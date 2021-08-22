@@ -18,7 +18,7 @@ class PostController extends Controller
     public function index()
     {
         //
-        $posts=Post::latest()->with('user','category')->get();
+        $posts=Post::latest()->with('user','category')->paginate(1);
        /*  $posts=DB::table('posts')
         ->join('users', 'posts.user_id', '=', 'users.id')
         ->select('posts.*','users.name')
@@ -130,7 +130,7 @@ class PostController extends Controller
     public function catgPosts( String $slug)
     {
      $catg=Categories::whereSlug($slug)->get();
-     $posts=Post::whereCategoryId($catg[0]->id)->with('user','category')->get();
+     $posts=Post::whereCategoryId($catg[0]->id)->with('user','category')->paginate(1);
 
      /*  foreach($posts as $post){
           $post->setAttribute('added_at',$post->created_at->diffForHumans());
@@ -142,7 +142,7 @@ class PostController extends Controller
     public function searchPosts( String $post)
     {
  
-     $posts=Post::where('title','like',"%".$post."%")->with('user','category')->get();
+     $posts=Post::where('title','like',"%".$post."%")->with('user','category')->paginate(1);
 
      /*  foreach($posts as $post){
           $post->setAttribute('added_at',$post->created_at->diffForHumans());

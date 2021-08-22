@@ -7,8 +7,9 @@
     <div class="container">
         <br><br>
         <div v-if="issearching">searching..</div>
-        <div class="row justify-content-center">
-            <div class="col-md-8" v-for="post in posts" :key="post.id">
+        <div v-if="posts.length==0">No results</div>
+        <div class="row justify-content-center" v-else>
+            <div class="col-md-8" v-for="post in posts.data" :key="post.id">
                <img :src="'/img/'+post.image" width="100" >
 <router-link :to="'/post/'+post.slug">{{post.title}}</router-link>
 {{post.body.substr(0,150)}}
@@ -16,6 +17,7 @@ posted by : {{post.user.name}} category: {{post.category.name}}
             </div>
         </div>
     </div>
+    <pagination :data="laravelData" @pagination-change-page="getPosts"></pagination>
       </div>
 
         <!-- Sidebar Widgets Column -->
@@ -39,6 +41,7 @@ posted by : {{post.user.name}} category: {{post.category.name}}
 
       </div>
  </div>
+
  </div>
 
 </template>
@@ -51,7 +54,8 @@ import categories from './Categories.vue' ;
         data(){
 return { posts: {},
          issearching:false,
-         postsearch:'' }
+         postsearch:'',
+          laravelData: {} }
         },
         mounted() {
             //console.log('Component mounted.')
@@ -62,29 +66,36 @@ return { posts: {},
         },
         watch:{
           postsearch(query){
+            this.issearching=true;
             if(query.length>0)
             {
             //console.log(query);
-            axios.get('/api/searchposts/'+query)
-            .then(res=>{console.log(res.data); this.posts=res.data;})
+            
+            axios.get('/api/searchposts/'+query+'?page=1' )
+            .then( res=>{ //console.log(res.data); 
+            this.posts=res.data; this.laravelData = res.data; this.issearching=false;})
             .catch(err=>console.log(err));
             }
             // else if(this.$route.path=='/category/'+this.$route.params.slug+'/posts')
             // this.getPosts2();
             else
+            {    
              this.getPosts();
+             this.issearching=false;
+            } 
+            
           }
         },
         methods:{
-            getPosts(){
-                axios.get('/api/posts')
-                .then(res=>{this.posts=res.data; //console.log(res.data)
+            getPosts(page=1){
+                axios.get('/api/posts?page=' + page)
+                .then(res=>{this.posts=res.data; this.laravelData = res.data; //console.log(res.data)
                 })
                 .then(err=>console.log(err));
             },
-            getPosts2(){
-                axios.get('/api/category/'+this.$route.params.slug+'/posts')
-                .then(res=>{this.posts=res.data; //console.log("category posts",res.data)
+            getPosts2(page=1){
+                axios.get('/api/category/'+this.$route.params.slug+'/posts?page=' + page)
+                .then(res=>{this.posts=res.data; this.laravelData = res.data;//console.log("category posts",res.data)
                            })
                 .then(err=>console.log(err));
             }
