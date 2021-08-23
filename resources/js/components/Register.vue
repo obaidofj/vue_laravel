@@ -18,12 +18,12 @@
                      ... the name is too short
                   </div>
               </div>
-            <!--   <div class="form-group">
+               <div class="form-group">
                   <input type="text" class="form-control" placeholder="lastname" v-model="lastname">
                   <div v-show="lastnameError" class="text-danger">
                      ... the lastname is too short
                   </div>
-              </div> -->
+              </div> 
               <div class="form-group">
                   <input type="email" class="form-control" placeholder="email" v-model="email">
                   <div v-show="emailError" class="text-danger">
@@ -99,7 +99,9 @@ export default {
             let  {name,email,password} = this;
            // this.$store.dispatch('RegisterUser',{name,email,password})
 
-
+          axios.post('register',{name,email,password})
+          .then(res=>{console.log("register",res.data)})
+          .catch(err=>console.log(err));
 
        }
      }

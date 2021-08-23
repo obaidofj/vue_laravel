@@ -2425,6 +2425,16 @@ __webpack_require__.r(__webpack_exports__);
       var name = this.name,
           email = this.email,
           password = this.password; // this.$store.dispatch('RegisterUser',{name,email,password})
+
+      axios.post('register', {
+        name: name,
+        email: email,
+        password: password
+      }).then(function (res) {
+        console.log("register", res.data);
+      })["catch"](function (err) {
+        return console.log(err);
+      });
     }
   }
 });
@@ -40080,6 +40090,50 @@ var render = function() {
                       [
                         _vm._v(
                           "\r\n                     ... the name is too short\r\n                  "
+                        )
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.lastname,
+                          expression: "lastname"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "text", placeholder: "lastname" },
+                      domProps: { value: _vm.lastname },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.lastname = $event.target.value
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.lastnameError,
+                            expression: "lastnameError"
+                          }
+                        ],
+                        staticClass: "text-danger"
+                      },
+                      [
+                        _vm._v(
+                          "\r\n                     ... the lastname is too short\r\n                  "
                         )
                       ]
                     )
