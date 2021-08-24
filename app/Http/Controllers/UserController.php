@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Response;
+use Validator;
 
 class UserController extends Controller
 {
@@ -17,12 +18,15 @@ class UserController extends Controller
      */
     public function register(Request $request)
     {
-         $request->validate( [
-            'name' => ['bail','required','min:3'],
-            'email' => ['required','email','unique:users'],
-            'password' => ['required','min:6'],
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:3',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6',
         ]);
- 
+        if($validator->fails()){
+            return response::json($validator->errors()); 
+        }
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,

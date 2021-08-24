@@ -13,9 +13,9 @@
           <form action="/examples/actions/confirmation.php" method="post" nonvalidate>
               <h2 class="text-center">Create New Account</h2>
               <div class="form-group">
-                  <input type="text" class="form-control" placeholder="name" v-model="name">
-                  <div v-show="nameError" class="text-danger">
-                     ... the name is too short
+                  <input type="text" class="form-control" placeholder="first name" v-model="firstname">
+                  <div v-show="firstnameError" class="text-danger">
+                     ... the firstname is too short
                   </div>
               </div>
                <div class="form-group">
@@ -60,21 +60,23 @@
 export default {
      data(){
          return {
-             name : '',
+             firstname : '',
+             lastname : '' ,
              password : '',
              email : '',
+             er:'',
          }
      },
      created(){
          console.log("register created");
      },
      computed:{
-         nameError(){
-             return this.name.length > 0 && this.name.length < 4
-         },/*
+         firstnameError(){
+             return this.firstname.length > 0 && this.firstname.length < 4
+         },
          lastnameError(){
              return this.lastname.length > 0 && this.lastname.length < 4
-         }, */
+         },
          emailError(){
            return !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) && this.email.length > 0
          },
@@ -82,8 +84,11 @@ export default {
              return this.password.length > 0 && this.password.length < 7
          },
          isValidForm(){
-             return this.name.length > 4   &&
+             return this.firstname.length > 4   && this.lastname.length > 4   &&
              this.password.length > 5 && (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email))
+         },
+         name(){
+           return this.firstname+' '+this.lastname;
          }
      },
      methods:{
@@ -97,11 +102,16 @@ export default {
            //this.$store.commit('setUserToken',{userToken:'sdmfjsdkfjlsds'})
             //console.log(this.$store.getters.isLogged)
             let  {name,email,password} = this;
-           // this.$store.dispatch('RegisterUser',{name,email,password})
-
-          axios.post('register',{name,email,password})
+            this.$store.dispatch('RegisterUser',{name,email,password});
+console.log(this.$store.getters.isRegistred);
+this.er=this.$store.getters.isRegistred;
+//if(this.eremail[0]=="The email has already been taken.")
+//alert("already");
+console.log("error",this.er);
+/*console.log(this.$store.state.userToken);
+          axios.post('api/register',{"name":name,"email":email,"password":password})
           .then(res=>{console.log("register",res.data)})
-          .catch(err=>console.log(err));
+          .catch(err=>console.log(err));*/
 
        }
      }

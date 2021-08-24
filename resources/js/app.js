@@ -34,9 +34,98 @@ Vue.component('pagination', require('laravel-vue-pagination'));
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 import routes from './routes/routes';
+import Vuex from 'vuex';
+import Vue from 'vue';
+
+Vue.use(Vuex);
+
+const store=new Vuex.Store({
+    state: {
+        userToken: null,
+        user: null,
+        EditedPost: {},
+        alreadyReg: {},
+    },
+    getters: { //center
+        isLogged(state) {
+            return !!state.userToken;
+        },
+        isAdmin(state) {
+            if (state.user) {
+                return state.user.is_admin
+            }
+            return null
+
+        },
+        PostToEdit(state) {
+            return state.EditedPost
+        },
+        isRegistred(state) {
+            return state.alreadyReg;
+        }
+    },
+    mutations: {
+        setUserToken(state, userToken) {
+            state.userToken = userToken;
+            localStorage.setItem('userToken', JSON.stringify(userToken));
+            axios.defaults.headers.common.Authorization = `Bearer ${userToken}`
+        },
+        removeUserToken(state) {
+
+            state.userToken = null;
+            localStorage.removeItem('userToken')
+        },
+        setUser(state, user) {
+            state.user = user
+        },
+        setRegistred(state,dat) {
+            state.alreadyReg = dat;
+        },
+        logout(state) {
+            state.userToken = null;
+            localStorage.removeItem('userToken');
+            window.location.pathname = "/"
+        },
+        EditPost(state, post) {
+            state.EditedPost = post;
+        }
+    },
+    actions: {
+        RegisterUser({ commit }, payload) {
+            axios.post('/api/register', payload)
+                .then(res => {
+                    console.log(res)
+                     commit('setRegistred',res)
+                    commit('setUserToken', res.data.token)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+        LoginUser({ commit }, payload) {
+            axios.post('/api/login', payload)
+                .then(res => {
+                    console.log(res)
+                    commit('setUserToken', res.data.token)
+                    axios.get('/api/user')
+                        .then(res => {
+                            //console.log(res.data)
+                            commit('setUser', res.data.user)
+                        })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+
+        }
+
+    }
+
+})
 
 const app = new Vue({
     el: '#app',
-    router:routes
+    router:routes,
+    store: store
     
 });
