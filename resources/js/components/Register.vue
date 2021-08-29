@@ -138,6 +138,7 @@ export default {
        },
        async checkEmailExist(){
          //alert("check func");
+         this.isExists=false;
          try
          {
           const res= await axios.get('/api/checkEmailExist/'+this.email);

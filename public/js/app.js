@@ -2303,7 +2303,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      var userToken = localStorage.getItem('userToken');
+      var userToken = this.$store.getters.getToken;
       console.log("Bearer ".concat(userToken));
       axios.defaults.headers.common.Authorization = "Bearer ".concat(userToken);
       axios.get('/api/posts?page=' + page).then(function (res) {
@@ -2477,7 +2477,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         if (_this.$store.getters.isLogged) {
           $('#register-modal').hide();
 
-          _this.$router.go();
+          _this.$router.go(_this.$router.currentRoute);
         }
       }); //this.er=this.$store.getters.isRegistred;
       //if(this.eremail[0]=="The email has already been taken.")
@@ -2498,11 +2498,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.prev = 0;
-                _context.next = 3;
+                //alert("check func");
+                _this2.isExists = false;
+                _context.prev = 1;
+                _context.next = 4;
                 return axios.get('/api/checkEmailExist/' + _this2.email);
 
-              case 3:
+              case 4:
                 res = _context.sent;
                 console.log("awit res", res);
 
@@ -2510,20 +2512,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this2.isExists = true;
                 }
 
-                _context.next = 11;
+                _context.next = 12;
                 break;
 
-              case 8:
-                _context.prev = 8;
-                _context.t0 = _context["catch"](0);
+              case 9:
+                _context.prev = 9;
+                _context.t0 = _context["catch"](1);
                 console.log("check email exist errore", _context.t0);
 
-              case 11:
+              case 12:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 8]]);
+        }, _callee, null, [[1, 9]]);
       }))();
     }
   }
@@ -2676,6 +2678,9 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_3__.default.Store({
     },
     isExists: function isExists(state) {
       return state.isExists;
+    },
+    getToken: function getToken(state) {
+      return state.userToken;
     }
   },
   mutations: {
@@ -2719,30 +2724,32 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_3__.default.Store({
 
               case 5:
                 res = _context.sent;
-
                 //console.log(res)
                 //console.log("exist val",res.data)
+                console.log("token", res.data.token);
+
                 if (res.data.exist == 'yes') {
                   commit('setExist', 'yes'); //console.log('exist yessss');
                 } else {
+                  console.log("token", res.data.token);
                   commit('setUserToken', res.data.token);
                   commit('setExist', 'no');
                 }
 
-                _context.next = 12;
+                _context.next = 13;
                 break;
 
-              case 9:
-                _context.prev = 9;
+              case 10:
+                _context.prev = 10;
                 _context.t0 = _context["catch"](1);
                 console.log(_context.t0);
 
-              case 12:
+              case 13:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[1, 9]]);
+        }, _callee, null, [[1, 10]]);
       }))();
     },
     LoginUser: function LoginUser(_ref2, payload) {

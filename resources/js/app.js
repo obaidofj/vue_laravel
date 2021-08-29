@@ -62,6 +62,9 @@ const store=new Vuex.Store({
         },
         isExists(state){
             return state.isExists
+        },
+        getToken(state){
+            return state.userToken
         }
     },
     mutations: {
@@ -99,6 +102,7 @@ const store=new Vuex.Store({
                
                     //console.log(res)
                     //console.log("exist val",res.data)
+                    //console.log("token",res.data.token);
                     if(res.data.exist=='yes')
                     {
                       commit('setExist','yes');
@@ -106,6 +110,7 @@ const store=new Vuex.Store({
                     }
                     else
                     {
+                        console.log("token",res.data.token);
                         commit('setUserToken', res.data.token);
                         commit('setExist','no');
                     }

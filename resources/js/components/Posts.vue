@@ -89,7 +89,7 @@ return { posts: {},
         },
         methods:{
             getPosts(page=1){
-              const userToken=localStorage.getItem('userToken');
+              const userToken=this.$store.getters.getToken;
               console.log(`Bearer ${userToken}`);
             axios.defaults.headers.common.Authorization = `Bearer ${userToken}`
                 axios.get('/api/posts?page=' + page)
