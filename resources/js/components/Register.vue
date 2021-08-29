@@ -25,9 +25,12 @@
                   </div>
               </div> 
               <div class="form-group">
-                  <input type="email" class="form-control" placeholder="email" v-model="email">
+                  <input type="email" class="form-control" placeholder="email" v-model="email" @blur="checkEmailExist">
                   <div v-show="emailError" class="text-danger">
                      ... the email is not valid
+                  </div>
+                  <div v-show="isEmailExist" class="text-danger">
+                     ... this email is already registred
                   </div>
               </div>
               <div class="form-group">
@@ -41,6 +44,9 @@
                   :disabled="!isValidForm"
                   @click.prevent="submitRegister"
                   >Create Account</button>
+              </div>
+              <div v-if="isExists">
+                user already exists
               </div>
               <div class="clearfix">
                   <a href="#" class="pull-right">Forgot Password?</a>
@@ -64,7 +70,7 @@ export default {
              lastname : '' ,
              password : '',
              email : '',
-             er:'',
+             isExists:false,
          }
      },
      created(){
@@ -83,13 +89,17 @@ export default {
          passwordError(){
              return this.password.length > 0 && this.password.length < 7
          },
+         isEmailExist(){
+            return this.isExists
+         },
          isValidForm(){
-             return this.firstname.length > 4   && this.lastname.length > 4   &&
+             return this.firstname.length > 4   && this.lastname.length > 4   && !this.isExists &&
              this.password.length > 5 && (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email))
          },
          name(){
            return this.firstname+' '+this.lastname;
          }
+         
      },
      methods:{
        submitRegister(){
@@ -102,17 +112,45 @@ export default {
            //this.$store.commit('setUserToken',{userToken:'sdmfjsdkfjlsds'})
             //console.log(this.$store.getters.isLogged)
             let  {name,email,password} = this;
-            this.$store.dispatch('RegisterUser',{name,email,password});
-console.log(this.$store.getters.isRegistred);
-this.er=this.$store.getters.isRegistred;
-//if(this.eremail[0]=="The email has already been taken.")
-//alert("already");
-console.log("error",this.er);
-/*console.log(this.$store.state.userToken);
+            this.$store.dispatch('RegisterUser',{name,email,password}).then(() => {
+  // ... 
+            
+            //console.log("exists2",this.$store.getters.isExists);
+            if(this.$store.getters.isExists=='yes'){
+              this.isExists=true;
+            }
+            if(this.$store.getters.isLogged){
+            
+            $('#register-modal').hide();
+            this.$router.go(this.$router.currentRoute)
+            }
+});
+            
+            //this.er=this.$store.getters.isRegistred;
+            //if(this.eremail[0]=="The email has already been taken.")
+            //alert("already");
+            //console.log("error",this.er);
+            /*console.log(this.$store.state.userToken);
           axios.post('api/register',{"name":name,"email":email,"password":password})
           .then(res=>{console.log("register",res.data)})
           .catch(err=>console.log(err));*/
 
+       },
+       async checkEmailExist(){
+         //alert("check func");
+         try
+         {
+          const res= await axios.get('/api/checkEmailExist/'+this.email);
+          console.log("awit res",res);
+         if(res.data.exist=='yes')
+            {
+              this.isExists=true;
+            }
+         
+         }catch (err) 
+         {
+           console.log("check email exist errore",err);
+           }
        }
      }
 }

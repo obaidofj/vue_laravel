@@ -18,11 +18,19 @@ class UserController extends Controller
      */
     public function register(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
         ]);
+        
+        
+        if(User::where('email','=',$request->email)->count()>0)
+        {
+            return response::json(['exist'=>'yes']);
+        }
+
         if($validator->fails()){
             return response::json($validator->errors()); 
         }
@@ -58,6 +66,16 @@ class UserController extends Controller
         } else {
             return response::json(['error' => 'UnAuthorised'], 401);
         }
+    }
+
+    public function checkEmailExist( String $email)
+    {
+        if(User::where('email','=',$email)->count()>0)
+        {
+            return response::json(['exist'=>'yes']);
+        }
+        else
+        return response::json(['exist'=>'no']);
     }
  
     /**

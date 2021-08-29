@@ -44,7 +44,7 @@ const store=new Vuex.Store({
         userToken: null,
         user: null,
         EditedPost: {},
-        alreadyReg: {},
+        isExists:'no'
     },
     getters: { //center
         isLogged(state) {
@@ -60,8 +60,8 @@ const store=new Vuex.Store({
         PostToEdit(state) {
             return state.EditedPost
         },
-        isRegistred(state) {
-            return state.alreadyReg;
+        isExists(state){
+            return state.isExists
         }
     },
     mutations: {
@@ -78,9 +78,6 @@ const store=new Vuex.Store({
         setUser(state, user) {
             state.user = user
         },
-        setRegistred(state,dat) {
-            state.alreadyReg = dat;
-        },
         logout(state) {
             state.userToken = null;
             localStorage.removeItem('userToken');
@@ -88,19 +85,33 @@ const store=new Vuex.Store({
         },
         EditPost(state, post) {
             state.EditedPost = post;
+        },
+        setExist(state, val)
+        {
+            state.isExists=val;
         }
     },
     actions: {
-        RegisterUser({ commit }, payload) {
-            axios.post('/api/register', payload)
-                .then(res => {
-                    console.log(res)
-                     commit('setRegistred',res)
-                    commit('setUserToken', res.data.token)
-                })
-                .catch(err => {
+        async RegisterUser({ commit }, payload) {
+           try{
+            commit('setExist','no');
+            const res = await axios.post('/api/register', payload);
+               
+                    //console.log(res)
+                    //console.log("exist val",res.data)
+                    if(res.data.exist=='yes')
+                    {
+                      commit('setExist','yes');
+                      //console.log('exist yessss');
+                    }
+                    else
+                    {
+                        commit('setUserToken', res.data.token);
+                        commit('setExist','no');
+                    }
+                } catch(err) {
                     console.log(err)
-                })
+                }
         },
         LoginUser({ commit }, payload) {
             axios.post('/api/login', payload)

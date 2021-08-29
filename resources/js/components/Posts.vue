@@ -59,6 +59,7 @@ return { posts: {},
         },
         mounted() {
             //console.log('Component mounted.')
+            
             if(this.$route.path=='/category/'+this.$route.params.slug+'/posts')
             this.getPosts2();
             else
@@ -88,12 +89,17 @@ return { posts: {},
         },
         methods:{
             getPosts(page=1){
+              const userToken=localStorage.getItem('userToken');
+              console.log(`Bearer ${userToken}`);
+            axios.defaults.headers.common.Authorization = `Bearer ${userToken}`
                 axios.get('/api/posts?page=' + page)
                 .then(res=>{this.posts=res.data; this.laravelData = res.data; //console.log(res.data)
                 })
                 .then(err=>console.log(err));
             },
             getPosts2(page=1){
+              const userToken=localStorage.getItem('userToken');
+            axios.defaults.headers.common.Authorization = `Bearer ${userToken}`
                 axios.get('/api/category/'+this.$route.params.slug+'/posts?page=' + page)
                 .then(res=>{this.posts=res.data; this.laravelData = res.data;//console.log("category posts",res.data)
                            })

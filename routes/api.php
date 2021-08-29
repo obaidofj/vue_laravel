@@ -26,11 +26,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::apiResource('categories',CategoriesController::class);
 Route::post('login',[UserController::class,'login']);
 Route::post('register',[UserController::class,'register']);
+Route::get('checkEmailExist/{email}',[UserController::class,'checkEmailExist']);
 Route::get('category/{slug}/posts',[PostController::class,'catgPosts']);
 Route::get('searchposts/{query}',[PostController::class,'searchPosts']);
 
 Route::middleware('auth:api')->group(function () {
     Route::get('user', 'UserController@details');
- Route::apiResource('posts',PostController::class);
-  
+    Route::apiResource('posts',PostController::class);
 });
