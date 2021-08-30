@@ -68,6 +68,11 @@ class UserController extends Controller
         }
     }
 
+    public function details(){  
+         //return response::json(['user' =>'user']);
+        return response::json(['user' => auth()->user()],200);
+    }
+
     public function checkEmailExist( String $email)
     {
         if(User::where('email','=',$email)->count()>0)
@@ -83,8 +88,5 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function details()
-    {
-        return response::json(['user' => auth()->user()], 200);
-    }
+    
 }

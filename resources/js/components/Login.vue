@@ -65,7 +65,9 @@ export default {
      methods:{
        submitLogin(){
          let {email,password} = this;
-          // this.$store.dispatch('LoginUser',{email,password})
+         this.$store.dispatch('LoginUser',{email,password})
+         if(this.$store.getters.isLogged)
+         $("#login-modal").hide();
        }
      },
      created(){

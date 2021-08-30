@@ -25,12 +25,28 @@
 
   <!-- Custom styles for this template -->
   <link href="{{asset('assets/css/added_style.css')}}" rel="stylesheet">
+  <style>
+  .con {
+  height: 100% !important;
+  } 
+  #app {
+  height: 80vh !important;
+  }
+
+ 
+  body, html {
+  height: 100%;
+  }
+  </style>
+
 </head>
 <body>
-    <div id="app">
+    <div id="app" >
        @include('layouts.header') 
-<br><br>
+       <div class="con">
+       <br><br>
        @yield('content')
+      </div>
        @include('layouts.footer')
     </div>
     <script src="{{asset('assets/js/jquery.min.js')}}"></script>

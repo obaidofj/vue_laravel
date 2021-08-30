@@ -42,7 +42,7 @@ Vue.use(Vuex);
 const store=new Vuex.Store({
     state: {
         userToken: null,
-        user: null,
+        user: {},
         EditedPost: {},
         isExists:'no'
     },
@@ -65,6 +65,9 @@ const store=new Vuex.Store({
         },
         getToken(state){
             return state.userToken
+        },
+        getUser(state){
+            return state.user
         }
     },
     mutations: {
@@ -121,7 +124,7 @@ const store=new Vuex.Store({
         LoginUser({ commit }, payload) {
             axios.post('/api/login', payload)
                 .then(res => {
-                    console.log(res)
+                    console.log("login",res)
                     commit('setUserToken', res.data.token)
                     axios.get('/api/user')
                         .then(res => {

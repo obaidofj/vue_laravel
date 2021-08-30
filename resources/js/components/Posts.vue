@@ -6,6 +6,7 @@
       <div class="col-md-8">
     <div class="container">
         <br><br>
+        <div v-show="!isLoged">you have to login ..</div>
         <div v-if="issearching">searching..</div>
         <div v-if="posts.length==0">No results</div>
         <div class="row justify-content-center" v-else>
@@ -55,11 +56,30 @@ import categories from './Categories.vue' ;
 return { posts: {},
          issearching:false,
          postsearch:'',
-          laravelData: {} }
+          laravelData: {},
+          isLogged:false }
+        },
+        computed:{
+          isLoged(){
+            if(this.$store.getters.isLogged)
+             {
+              if(this.$route.path=='/category/'+this.$route.params.slug+'/posts')
+            this.getPosts2();
+            else
+            this.getPosts();
+             this.isLogged=true;
+             }
+             return this.$store.getters.isLogged;
+          }
         },
         mounted() {
             //console.log('Component mounted.')
             
+            this.$root.$on('getBo', () => {
+            // your code goes here
+            this.getPosts()
+            });
+
             if(this.$route.path=='/category/'+this.$route.params.slug+'/posts')
             this.getPosts2();
             else
@@ -87,19 +107,18 @@ return { posts: {},
             
           }
         },
+        
         methods:{
             getPosts(page=1){
-              const userToken=this.$store.getters.getToken;
-              console.log(`Bearer ${userToken}`);
-            axios.defaults.headers.common.Authorization = `Bearer ${userToken}`
+            
+            console.log("get posts");
                 axios.get('/api/posts?page=' + page)
-                .then(res=>{this.posts=res.data; this.laravelData = res.data; //console.log(res.data)
+                .then(res=>{this.posts=res.data; console.log("res data",res.data); this.laravelData = res.data; //console.log(res.data)
                 })
                 .then(err=>console.log(err));
             },
             getPosts2(page=1){
-              const userToken=localStorage.getItem('userToken');
-            axios.defaults.headers.common.Authorization = `Bearer ${userToken}`
+           
                 axios.get('/api/category/'+this.$route.params.slug+'/posts?page=' + page)
                 .then(res=>{this.posts=res.data; this.laravelData = res.data;//console.log("category posts",res.data)
                            })

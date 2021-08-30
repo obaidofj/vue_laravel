@@ -23,7 +23,7 @@ class PostSeeder extends Seeder
           quae animi? Minus quis corporis sunt minima veritatis 
           culpa consequuntur molestias magni quos, non cumque! Et ex repellat id praesentium suscipit.',
           'image'=>'p1.jpg',
-          'user_id'=>1,
+          'user_id'=>15,
           'category_id'=>1
         ]);
        
@@ -34,7 +34,7 @@ class PostSeeder extends Seeder
           quae animi? Minus quis corporis sunt minima veritatis 
           culpa consequuntur molestias magni quos, non cumque! Et ex repellat id praesentium suscipit.',
           'image'=>'p2.jpg',
-          'user_id'=>1,
+          'user_id'=>15,
           'category_id'=>2
         ]);
         DB::table('posts')->insert([
@@ -44,7 +44,7 @@ class PostSeeder extends Seeder
           quae animi? Minus quis corporis sunt minima veritatis 
           culpa consequuntur molestias magni quos, non cumque! Et ex repellat id praesentium suscipit.',
           'image'=>'p3.jpg',
-          'user_id'=>1,
+          'user_id'=>15,
           'category_id'=>1
         ]);
     }

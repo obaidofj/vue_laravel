@@ -122,7 +122,8 @@ export default {
             if(this.$store.getters.isLogged){
             
             $('#register-modal').hide();
-            this.$router.go(this.$router.currentRoute)
+            //this.$router.go(this.$router.currentRoute)
+            this.getBos();
             }
 });
             
@@ -152,7 +153,10 @@ export default {
          {
            console.log("check email exist errore",err);
            }
-       }
+       },
+        getBos: function() {
+             this.$root.$emit('getBo');
+        }
      }
 }
 </script>

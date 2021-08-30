@@ -1882,11 +1882,22 @@ __webpack_require__.r(__webpack_exports__);
   setup: function setup() {},
   data: function data() {
     return {
-      categories: {}
+      categories: {},
+      isLogged: false
     };
   },
   created: function created() {
     this.getCategories();
+  },
+  computed: {
+    isLoged: function isLoged() {
+      if (this.$store.getters.isLogged) {
+        this.getCategories();
+        this.isLogged = true;
+      }
+
+      return this.$store.getters.isLogged;
+    }
   },
   methods: {
     getCategories: function getCategories() {
@@ -2054,7 +2065,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({});
+//
+//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    return {
+      name: ''
+    };
+  },
+  computed: {
+    isLogged: function isLogged() {
+      return this.$store.getters.isLogged;
+    },
+    userName: function userName() {
+      return this.$store.getters.getUser;
+    }
+  }
+});
 
 /***/ }),
 
@@ -2135,7 +2162,12 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     submitLogin: function submitLogin() {
       var email = this.email,
-          password = this.password; // this.$store.dispatch('LoginUser',{email,password})
+          password = this.password;
+      this.$store.dispatch('LoginUser', {
+        email: email,
+        password: password
+      });
+      if (this.$store.getters.isLogged) $("#login-modal").hide();
     }
   },
   created: function created() {
@@ -2257,6 +2289,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
@@ -2267,16 +2300,33 @@ __webpack_require__.r(__webpack_exports__);
       posts: {},
       issearching: false,
       postsearch: '',
-      laravelData: {}
+      laravelData: {},
+      isLogged: false
     };
   },
+  computed: {
+    isLoged: function isLoged() {
+      if (this.$store.getters.isLogged) {
+        if (this.$route.path == '/category/' + this.$route.params.slug + '/posts') this.getPosts2();else this.getPosts();
+        this.isLogged = true;
+      }
+
+      return this.$store.getters.isLogged;
+    }
+  },
   mounted: function mounted() {
+    var _this = this;
+
     //console.log('Component mounted.')
+    this.$root.$on('getBo', function () {
+      // your code goes here
+      _this.getPosts();
+    });
     if (this.$route.path == '/category/' + this.$route.params.slug + '/posts') this.getPosts2();else this.getPosts();
   },
   watch: {
     postsearch: function postsearch(query) {
-      var _this = this;
+      var _this2 = this;
 
       this.issearching = true;
 
@@ -2284,9 +2334,9 @@ __webpack_require__.r(__webpack_exports__);
         //console.log(query);
         axios.get('/api/searchposts/' + query + '?page=1').then(function (res) {
           //console.log(res.data); 
-          _this.posts = res.data;
-          _this.laravelData = res.data;
-          _this.issearching = false;
+          _this2.posts = res.data;
+          _this2.laravelData = res.data;
+          _this2.issearching = false;
         })["catch"](function (err) {
           return console.log(err);
         });
@@ -2300,28 +2350,25 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     getPosts: function getPosts() {
-      var _this2 = this;
+      var _this3 = this;
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      var userToken = this.$store.getters.getToken;
-      console.log("Bearer ".concat(userToken));
-      axios.defaults.headers.common.Authorization = "Bearer ".concat(userToken);
+      console.log("get posts");
       axios.get('/api/posts?page=' + page).then(function (res) {
-        _this2.posts = res.data;
-        _this2.laravelData = res.data; //console.log(res.data)
+        _this3.posts = res.data;
+        console.log("res data", res.data);
+        _this3.laravelData = res.data; //console.log(res.data)
       }).then(function (err) {
         return console.log(err);
       });
     },
     getPosts2: function getPosts2() {
-      var _this3 = this;
+      var _this4 = this;
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      var userToken = localStorage.getItem('userToken');
-      axios.defaults.headers.common.Authorization = "Bearer ".concat(userToken);
       axios.get('/api/category/' + this.$route.params.slug + '/posts?page=' + page).then(function (res) {
-        _this3.posts = res.data;
-        _this3.laravelData = res.data; //console.log("category posts",res.data)
+        _this4.posts = res.data;
+        _this4.laravelData = res.data; //console.log("category posts",res.data)
       }).then(function (err) {
         return console.log(err);
       });
@@ -2475,9 +2522,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
 
         if (_this.$store.getters.isLogged) {
-          $('#register-modal').hide();
+          $('#register-modal').hide(); //this.$router.go(this.$router.currentRoute)
 
-          _this.$router.go(_this.$router.currentRoute);
+          _this.getBos();
         }
       }); //this.er=this.$store.getters.isRegistred;
       //if(this.eremail[0]=="The email has already been taken.")
@@ -2527,6 +2574,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }, _callee, null, [[1, 9]]);
       }))();
+    },
+    getBos: function getBos() {
+      this.$root.$emit('getBo');
     }
   }
 });
@@ -2657,7 +2707,7 @@ vue__WEBPACK_IMPORTED_MODULE_1__.default.use(vuex__WEBPACK_IMPORTED_MODULE_3__.d
 var store = new vuex__WEBPACK_IMPORTED_MODULE_3__.default.Store({
   state: {
     userToken: null,
-    user: null,
+    user: {},
     EditedPost: {},
     isExists: 'no'
   },
@@ -2681,6 +2731,9 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_3__.default.Store({
     },
     getToken: function getToken(state) {
       return state.userToken;
+    },
+    getUser: function getUser(state) {
+      return state.user;
     }
   },
   mutations: {
@@ -2724,10 +2777,10 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_3__.default.Store({
 
               case 5:
                 res = _context.sent;
+
                 //console.log(res)
                 //console.log("exist val",res.data)
-                console.log("token", res.data.token);
-
+                //console.log("token",res.data.token);
                 if (res.data.exist == 'yes') {
                   commit('setExist', 'yes'); //console.log('exist yessss');
                 } else {
@@ -2736,26 +2789,26 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_3__.default.Store({
                   commit('setExist', 'no');
                 }
 
-                _context.next = 13;
+                _context.next = 12;
                 break;
 
-              case 10:
-                _context.prev = 10;
+              case 9:
+                _context.prev = 9;
                 _context.t0 = _context["catch"](1);
                 console.log(_context.t0);
 
-              case 13:
+              case 12:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[1, 10]]);
+        }, _callee, null, [[1, 9]]);
       }))();
     },
     LoginUser: function LoginUser(_ref2, payload) {
       var commit = _ref2.commit;
       axios.post('/api/login', payload).then(function (res) {
-        console.log(res);
+        console.log("login", res);
         commit('setUserToken', res.data.token);
         axios.get('/api/user').then(function (res) {
           //console.log(res.data)
@@ -40357,29 +40410,35 @@ var render = function() {
       _c("div", { staticClass: "card-body" }, [
         _c("div", { staticClass: "row" }, [
           _c("div", { staticClass: "col-lg-6" }, [
-            _vm.categories.length > 0
-              ? _c(
-                  "ul",
-                  { staticClass: "list-unstyled mb-0" },
-                  _vm._l(_vm.categories, function(catg) {
-                    return _c(
-                      "li",
-                      { key: catg.id },
-                      [
-                        _c(
-                          "router-link",
-                          {
-                            attrs: { to: "/category/" + catg.slug + "/posts" }
-                          },
-                          [_vm._v(_vm._s(catg.name) + " ")]
-                        )
-                      ],
-                      1
+            _c(
+              "ul",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.categories.length > 0,
+                    expression: "categories.length>0"
+                  }
+                ],
+                staticClass: "list-unstyled mb-0"
+              },
+              _vm._l(_vm.categories, function(catg) {
+                return _c(
+                  "li",
+                  { key: catg.id },
+                  [
+                    _c(
+                      "router-link",
+                      { attrs: { to: "/category/" + catg.slug + "/posts" } },
+                      [_vm._v(_vm._s(catg.name) + " ")]
                     )
-                  }),
-                  0
+                  ],
+                  1
                 )
-              : _vm._e()
+              }),
+              0
+            )
           ])
         ])
       ])
@@ -40555,7 +40614,30 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_c("router-view", { key: _vm.$route.path })], 1)
+  return _c(
+    "div",
+    [
+      _c("br"),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.isLogged,
+              expression: "isLogged"
+            }
+          ]
+        },
+        [_vm._v(" welcome : " + _vm._s(_vm.userName.name))]
+      ),
+      _vm._v(" "),
+      _c("router-view", { key: _vm.$route.path })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -40875,6 +40957,21 @@ var render = function() {
           _c("div", { staticClass: "container" }, [
             _c("br"),
             _c("br"),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !_vm.isLoged,
+                    expression: "!isLoged"
+                  }
+                ]
+              },
+              [_vm._v("you have to login ..")]
+            ),
             _vm._v(" "),
             _vm.issearching ? _c("div", [_vm._v("searching..")]) : _vm._e(),
             _vm._v(" "),
