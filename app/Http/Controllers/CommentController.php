@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Response;
+use Auth;
 
 class CommentController extends Controller
 {
@@ -36,6 +38,18 @@ class CommentController extends Controller
     public function store(Request $request)
     {
         //
+        $comment=Comment::create([
+            'body'=>$request->body,
+            'user_id'=>Auth::id(),
+            'post_id'=>$request->post_id
+        ]);
+
+        return response::json([ 
+            'id'=>$comment->id,
+            'body'=>$comment->body,
+            'user_id'=>$comment->user_id,
+            'created_at'=>$comment->created_at->diffForHumans(),
+        ]);
     }
 
     /**

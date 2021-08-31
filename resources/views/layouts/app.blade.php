@@ -30,7 +30,7 @@
   height: 100% !important;
   } 
   #app {
-  height: 80vh !important;
+    min-height: 80vh !important;
   }
 
  

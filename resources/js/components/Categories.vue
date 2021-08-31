@@ -33,6 +33,7 @@ export default {
     },
     created(){
         this.getCategories();
+        console.log("catg created");
     },
     computed:{
       isLoged(){

@@ -13,6 +13,9 @@
               name:''
           }
       },
+      created(){
+        this.updateToken();
+      },
       computed:{
           isLogged(){
                         
@@ -22,6 +25,14 @@
               return this.$store.getters.getUser;
           }
       },
+      methods:{
+          updateToken(){
+              const token=JSON.parse(localStorage.getItem('userToken'));
+              const user=JSON.parse(localStorage.getItem('userName'));
+              this.$store.commit('setUserToken',token);
+              this.$store.commit('setUser',user);
+          }
+      }
       
     }
 </script>

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,4 +37,5 @@ Route::middleware('auth:api')->group(function () {
     Route::get('category/{slug}/posts',[PostController::class,'catgPosts']);
 Route::get('searchposts/{query}',[PostController::class,'searchPosts']);
 Route::apiResource('categories',CategoriesController::class);
+Route::post('comment/create',[CommentController::class,'store']);
 });

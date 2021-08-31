@@ -1888,6 +1888,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     this.getCategories();
+    console.log("catg created");
   },
   computed: {
     isLoged: function isLoged() {
@@ -2073,12 +2074,23 @@ __webpack_require__.r(__webpack_exports__);
       name: ''
     };
   },
+  created: function created() {
+    this.updateToken();
+  },
   computed: {
     isLogged: function isLogged() {
       return this.$store.getters.isLogged;
     },
     userName: function userName() {
       return this.$store.getters.getUser;
+    }
+  },
+  methods: {
+    updateToken: function updateToken() {
+      var token = JSON.parse(localStorage.getItem('userToken'));
+      var user = JSON.parse(localStorage.getItem('userName'));
+      this.$store.commit('setUserToken', token);
+      this.$store.commit('setUser', user);
     }
   }
 });
@@ -2205,10 +2217,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      post: ''
+      post: '',
+      post_id: '',
+      body: '',
+      comments: []
     };
   },
   created: function created() {
@@ -2219,10 +2248,34 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios.get("/api/posts/" + this.$route.params.slug).then(function (res) {
-        _this.post = res.data; //console.log(res)
+        _this.post = res.data;
+        _this.post_id = _this.post.id;
+        _this.comments = _this.post.comments; //console.log(res)
       })["catch"](function (err) {
         return console.log(err);
       });
+    },
+    addComment: function addComment() {
+      var _this2 = this;
+
+      var body = this.body,
+          post_id = this.post_id;
+      axios.post('/api/comment/create', {
+        body: body,
+        post_id: post_id
+      }).then(function (res) {
+        console.log("res create comment", res);
+        _this2.body = "";
+
+        _this2.comments.unshift(res.data);
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    }
+  },
+  computed: {
+    isLogged: function isLogged() {
+      return this.$store.getters.isLogged;
     }
   }
 });
@@ -2752,6 +2805,7 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_3__.default.Store({
     logout: function logout(state) {
       state.userToken = null;
       localStorage.removeItem('userToken');
+      localStorage.removeItem('userName');
       window.location.pathname = "/";
     },
     EditPost: function EditPost(state, post) {
@@ -2813,6 +2867,7 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_3__.default.Store({
         axios.get('/api/user').then(function (res) {
           //console.log(res.data)
           commit('setUser', res.data.user);
+          localStorage.setItem('userName', JSON.stringify(res.data.user));
         });
       })["catch"](function (err) {
         console.log(err);
@@ -40906,15 +40961,100 @@ var render = function() {
               _vm._s(_vm.post.body) +
               "\nposted by : " +
               _vm._s(_vm.post.user) +
-              "\n"
+              "\n   "
           ),
-          _vm.post.comments_count > 0
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.isLogged,
+                  expression: "isLogged"
+                }
+              ],
+              staticClass: "card my-4"
+            },
+            [
+              _c("h5", { staticClass: "card-header" }, [
+                _vm._v("Leave a Comment:")
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "card-body" }, [
+                _c("form", [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.post_id,
+                        expression: "post_id"
+                      }
+                    ],
+                    attrs: { type: "hidden", name: "" },
+                    domProps: { value: _vm.post_id },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.post_id = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("textarea", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.body,
+                          expression: "body"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { rows: "3" },
+                      domProps: { value: _vm.body },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.body = $event.target.value
+                        }
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary",
+                      attrs: { type: "submit" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.addComment.apply(null, arguments)
+                        }
+                      }
+                    },
+                    [_vm._v("Submit")]
+                  )
+                ])
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _vm.comments.length > 0
             ? _c("div", [
-                _vm._v(" " + _vm._s(_vm.post.comments_count) + " Comments:")
+                _vm._v(" " + _vm._s(_vm.comments.length) + " Comments:")
               ])
             : _vm._e(),
           _vm._v(" "),
-          _vm._l(_vm.post.comments, function(comment) {
+          _vm._l(_vm.comments, function(comment) {
             return _c("div", { key: comment.id }, [
               _vm._v("\n" + _vm._s(comment.body) + "\n    ")
             ])

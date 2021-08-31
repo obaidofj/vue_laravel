@@ -37,7 +37,7 @@ posted by : {{post.user.name}} category: {{post.category.name}}
           </div>
         </div>
 
-      <categories></categories>
+      <categories ></categories>
 
 
       </div>

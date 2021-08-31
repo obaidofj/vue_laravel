@@ -87,6 +87,7 @@ const store=new Vuex.Store({
         logout(state) {
             state.userToken = null;
             localStorage.removeItem('userToken');
+            localStorage.removeItem('userName');
             window.location.pathname = "/"
         },
         EditPost(state, post) {
@@ -129,7 +130,8 @@ const store=new Vuex.Store({
                     axios.get('/api/user')
                         .then(res => {
                             //console.log(res.data)
-                            commit('setUser', res.data.user)
+                            commit('setUser', res.data.user);
+                            localStorage.setItem('userName', JSON.stringify(res.data.user));
                         })
                 })
                 .catch(err => {
