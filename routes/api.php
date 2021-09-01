@@ -35,7 +35,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('user', [UserController::class,'details']);
     Route::apiResource('posts',PostController::class);
     Route::get('category/{slug}/posts',[PostController::class,'catgPosts']);
-Route::get('searchposts/{query}',[PostController::class,'searchPosts']);
-Route::apiResource('categories',CategoriesController::class);
-Route::post('comment/create',[CommentController::class,'store']);
+    Route::get('searchposts/{query}',[PostController::class,'searchPosts']);
+    Route::apiResource('categories',CategoriesController::class);
+    Route::post('comment/create',[CommentController::class,'store']);
 });

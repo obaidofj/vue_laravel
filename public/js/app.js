@@ -2068,6 +2068,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -40672,6 +40705,73 @@ var render = function() {
   return _c(
     "div",
     [
+      _c(
+        "nav",
+        {
+          staticClass: "navbar navbar-expand-lg navbar-dark bg-dark fixed-top"
+        },
+        [
+          _c("div", { staticClass: "container" }, [
+            _c("a", { staticClass: "navbar-brand", attrs: { href: "#" } }, [
+              _vm._v("Obaid")
+            ]),
+            _vm._v(" "),
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "collapse navbar-collapse",
+                attrs: { id: "navbarResponsive" }
+              },
+              [
+                _c("ul", { staticClass: "navbar-nav ml-auto" }, [
+                  _c(
+                    "li",
+                    { staticClass: "nav-item active" },
+                    [
+                      _c(
+                        "router-link",
+                        { staticClass: "nav-link", attrs: { to: "/" } },
+                        [
+                          _vm._v("Home\n              "),
+                          _c("span", { staticClass: "sr-only" }, [
+                            _vm._v("(current)")
+                          ])
+                        ]
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "li",
+                    { staticClass: "nav-item active" },
+                    [
+                      _c(
+                        "router-link",
+                        { staticClass: "nav-link", attrs: { to: "/admin" } },
+                        [
+                          _vm._v("Admin\n              "),
+                          _c("span", { staticClass: "sr-only" }, [
+                            _vm._v("(current)")
+                          ])
+                        ]
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _vm._m(2)
+                ])
+              ]
+            )
+          ])
+        ]
+      ),
+      _vm._v(" "),
       _c("br"),
       _vm._v(" "),
       _c(
@@ -40694,7 +40794,80 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "navbar-toggler",
+        attrs: {
+          type: "button",
+          "data-toggle": "collapse",
+          "data-target": "#navbarResponsive",
+          "aria-controls": "navbarResponsive",
+          "aria-expanded": "false",
+          "aria-label": "Toggle navigation"
+        }
+      },
+      [_c("span", { staticClass: "navbar-toggler-icon" })]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "li",
+      {
+        staticClass: "nav-item register-btn reg-login-btn",
+        attrs: { "data-toggle": "modal", "data-target": "#register-modal" }
+      },
+      [
+        _c(
+          "a",
+          {
+            staticClass: "btn btn-info nav-link",
+            attrs: {
+              href: "",
+              "data-toggle": "modal",
+              "data-target": "#register-modal"
+            }
+          },
+          [_vm._v("Register")]
+        )
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "li",
+      {
+        staticClass: "nav-item reg-login-btn",
+        attrs: { "data-toggle": "modal", "data-target": "#login-modal" }
+      },
+      [
+        _c(
+          "a",
+          {
+            staticClass: "btn btn-primary text-weight nav-link",
+            attrs: {
+              "data-toggle": "modal",
+              href: "#",
+              "data-target": "#login-modal"
+            }
+          },
+          [_vm._v("login")]
+        )
+      ]
+    )
+  }
+]
 render._withStripped = true
 
 
@@ -41695,7 +41868,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div")
+  return _c("div", [_vm._v("Home")])
 }
 var staticRenderFns = []
 render._withStripped = true
