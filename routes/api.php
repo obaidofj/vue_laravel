@@ -6,6 +6,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,4 +39,13 @@ Route::middleware('auth:api')->group(function () {
     Route::get('searchposts/{query}',[PostController::class,'searchPosts']);
     Route::apiResource('categories',CategoriesController::class);
     Route::post('comment/create',[CommentController::class,'store']);
+});
+
+
+Route::group(['prefix'=>'/admin','middleware'=>'auth:api'],function(){
+    Route::get('posts',[AdminController::class,'getPosts']);
+    Route::get('categories',[AdminController::class,'getCategories']);
+    Route::post('addPost',[AdminController::class,'addPost']);
+    Route::post('updatePost',[AdminController::class,'updatePost']);
+    Route::post('deletePosts',[AdminController::class,'deletePosts']);
 });

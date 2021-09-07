@@ -42,7 +42,7 @@
 </head>
 <body>
     <div id="app" >
-       <!-- @include('layouts.header')  -->
+       
        <div class="con">
        <br><br>
        @yield('content')
@@ -53,6 +53,7 @@
     <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('js/app.js')}}" defer ></script>
     <script>
+      //import $ from 'jquery';
         $(document).ready(function(){
           $('.switch-tologin-modal').on('click',function(){
             $('#register-modal').modal('hide');
