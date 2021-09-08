@@ -16,25 +16,28 @@
             </router-link>
           </li>
         
-           <li class="nav-item active">
+           <li v-if="isAdmin" class="nav-item active">
             <router-link class="nav-link" to="/admin">Admin
               <span class="sr-only">(current)</span>
             </router-link>
           </li>
-        
-          <li class="nav-item register-btn reg-login-btn" data-toggle="modal" data-target="#register-modal">
+        <li v-if="isLogged"  class="nav-item reg-login-btn" >
+            <a class="btn btn-primary text-weight nav-link" href="#"  @click="logout">logout</a>
+          </li>
+          <li v-show="!isLogged" class="nav-item register-btn reg-login-btn" data-toggle="modal" data-target="#register-modal">
             <a class="btn btn-info nav-link" href="" data-toggle="modal" data-target="#register-modal">Register</a>
           </li>
-          <li class="nav-item reg-login-btn"  data-toggle="modal" data-target="#login-modal">
+          <li v-show="!isLogged"  class="nav-item reg-login-btn"  data-toggle="modal" data-target="#login-modal">
             <a class="btn btn-primary text-weight nav-link"  data-toggle="modal" href="#" data-target="#login-modal">login</a>
           </li>
+           
         </ul>
       </div>
     </div>
   </nav>
  
     <br>
-    <div v-show="isLogged"> welcome : {{userName.name}}</div>
+    <div v-show="isLogged"> welcome : {{name.name}}</div>
 <router-view :key="$route.path"></router-view>
 </div>
 </template>
@@ -43,20 +46,21 @@
     export default {
       data(){
           return {
-              name:''
+              name:{},
+              
           }
       },
       created(){
         this.updateToken();
       },
       computed:{
-          isLogged(){
-                        
+          isLogged(){                    
               return this.$store.getters.isLogged;
           },
-          userName(){
-              return this.$store.getters.getUser;
+          isAdmin(){
+              return this.$store.getters.isAdmin;
           }
+          
       },
       methods:{
           updateToken(){
@@ -64,6 +68,13 @@
               const user=JSON.parse(localStorage.getItem('userName'));
               this.$store.commit('setUserToken',token);
               this.$store.commit('setUser',user);
+          }
+          ,
+          logout(){
+                this.$store.commit('logout');
+          },
+          userName(){
+             this.name=this.$store.getters.getUser;
           }
       }
       

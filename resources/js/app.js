@@ -52,10 +52,9 @@ const store=new Vuex.Store({
         },
         isAdmin(state) {
             if (state.user) {
-                return state.user.is_admin
+                return state.user.is_admin;
             }
-            return null
-
+            return null;
         },
         PostToEdit(state) {
             return state.EditedPost
@@ -88,7 +87,9 @@ const store=new Vuex.Store({
             state.userToken = null;
             localStorage.removeItem('userToken');
             localStorage.removeItem('userName');
-            window.location.pathname = "/"
+            axios.defaults.headers.common.Authorization ="";
+            this.$router.go('/');
+            
         },
         EditPost(state, post) {
             state.EditedPost = post;
@@ -122,21 +123,21 @@ const store=new Vuex.Store({
                     console.log(err)
                 }
         },
-        LoginUser({ commit }, payload) {
-            axios.post('/api/login', payload)
-                .then(res => {
-                    console.log("login",res)
+        async LoginUser({ commit }, payload) {
+           try{ const res = await axios.post('/api/login', payload);
+                if(res.data.token ) {
+                    //console.log("login",res)
                     commit('setUserToken', res.data.token)
-                    axios.get('/api/user')
-                        .then(res => {
+                    const res2= await axios.get('/api/user');
+                    if(res2.data.user) {
                             //console.log(res.data)
-                            commit('setUser', res.data.user);
-                            localStorage.setItem('userName', JSON.stringify(res.data.user));
-                        })
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+                            commit('setUser', res2.data.user);
+                            localStorage.setItem('userName', JSON.stringify(res2.data.user));
+                        }
+                }
+            } catch(err) {
+                console.log(err)
+            }
 
         }
 

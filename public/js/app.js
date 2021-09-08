@@ -2101,10 +2101,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      name: ''
+      name: {}
     };
   },
   created: function created() {
@@ -2114,8 +2117,8 @@ __webpack_require__.r(__webpack_exports__);
     isLogged: function isLogged() {
       return this.$store.getters.isLogged;
     },
-    userName: function userName() {
-      return this.$store.getters.getUser;
+    isAdmin: function isAdmin() {
+      return this.$store.getters.isAdmin;
     }
   },
   methods: {
@@ -2124,6 +2127,12 @@ __webpack_require__.r(__webpack_exports__);
       var user = JSON.parse(localStorage.getItem('userName'));
       this.$store.commit('setUserToken', token);
       this.$store.commit('setUser', user);
+    },
+    logout: function logout() {
+      this.$store.commit('logout');
+    },
+    userName: function userName() {
+      this.name = this.$store.getters.getUser;
     }
   }
 });
@@ -2206,13 +2215,16 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     submitLogin: function submitLogin() {
+      var _this = this;
+
       var email = this.email,
           password = this.password;
       this.$store.dispatch('LoginUser', {
         email: email,
         password: password
+      }).then(function () {
+        if (_this.$store.getters.isLogged) $("#login-modal").modal('toggle');
       });
-      if (this.$store.getters.isLogged) $("#login-modal").hide();
     }
   },
   created: function created() {
@@ -3252,7 +3264,8 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_3__["default"].Store({
       state.userToken = null;
       localStorage.removeItem('userToken');
       localStorage.removeItem('userName');
-      window.location.pathname = "/";
+      axios.defaults.headers.common.Authorization = "";
+      this.$router.go('/');
     },
     EditPost: function EditPost(state, post) {
       state.EditedPost = post;
@@ -3306,18 +3319,55 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_3__["default"].Store({
       }))();
     },
     LoginUser: function LoginUser(_ref2, payload) {
-      var commit = _ref2.commit;
-      axios.post('/api/login', payload).then(function (res) {
-        console.log("login", res);
-        commit('setUserToken', res.data.token);
-        axios.get('/api/user').then(function (res) {
-          //console.log(res.data)
-          commit('setUser', res.data.user);
-          localStorage.setItem('userName', JSON.stringify(res.data.user));
-        });
-      })["catch"](function (err) {
-        console.log(err);
-      });
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var commit, res, res2;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                commit = _ref2.commit;
+                _context2.prev = 1;
+                _context2.next = 4;
+                return axios.post('/api/login', payload);
+
+              case 4:
+                res = _context2.sent;
+
+                if (!res.data.token) {
+                  _context2.next = 11;
+                  break;
+                }
+
+                //console.log("login",res)
+                commit('setUserToken', res.data.token);
+                _context2.next = 9;
+                return axios.get('/api/user');
+
+              case 9:
+                res2 = _context2.sent;
+
+                if (res2.data.user) {
+                  //console.log(res.data)
+                  commit('setUser', res2.data.user);
+                  localStorage.setItem('userName', JSON.stringify(res2.data.user));
+                }
+
+              case 11:
+                _context2.next = 16;
+                break;
+
+              case 13:
+                _context2.prev = 13;
+                _context2.t0 = _context2["catch"](1);
+                console.log(_context2.t0);
+
+              case 16:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[1, 13]]);
+      }))();
     }
   }
 });
@@ -41653,27 +41703,108 @@ var render = function() {
                     1
                   ),
                   _vm._v(" "),
+                  _vm.isAdmin
+                    ? _c(
+                        "li",
+                        { staticClass: "nav-item active" },
+                        [
+                          _c(
+                            "router-link",
+                            {
+                              staticClass: "nav-link",
+                              attrs: { to: "/admin" }
+                            },
+                            [
+                              _vm._v("Admin\n              "),
+                              _c("span", { staticClass: "sr-only" }, [
+                                _vm._v("(current)")
+                              ])
+                            ]
+                          )
+                        ],
+                        1
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.isLogged
+                    ? _c("li", { staticClass: "nav-item reg-login-btn" }, [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "btn btn-primary text-weight nav-link",
+                            attrs: { href: "#" },
+                            on: { click: _vm.logout }
+                          },
+                          [_vm._v("logout")]
+                        )
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
                   _c(
                     "li",
-                    { staticClass: "nav-item active" },
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: !_vm.isLogged,
+                          expression: "!isLogged"
+                        }
+                      ],
+                      staticClass: "nav-item register-btn reg-login-btn",
+                      attrs: {
+                        "data-toggle": "modal",
+                        "data-target": "#register-modal"
+                      }
+                    },
                     [
                       _c(
-                        "router-link",
-                        { staticClass: "nav-link", attrs: { to: "/admin" } },
-                        [
-                          _vm._v("Admin\n              "),
-                          _c("span", { staticClass: "sr-only" }, [
-                            _vm._v("(current)")
-                          ])
-                        ]
+                        "a",
+                        {
+                          staticClass: "btn btn-info nav-link",
+                          attrs: {
+                            href: "",
+                            "data-toggle": "modal",
+                            "data-target": "#register-modal"
+                          }
+                        },
+                        [_vm._v("Register")]
                       )
-                    ],
-                    1
+                    ]
                   ),
                   _vm._v(" "),
-                  _vm._m(1),
-                  _vm._v(" "),
-                  _vm._m(2)
+                  _c(
+                    "li",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: !_vm.isLogged,
+                          expression: "!isLogged"
+                        }
+                      ],
+                      staticClass: "nav-item reg-login-btn",
+                      attrs: {
+                        "data-toggle": "modal",
+                        "data-target": "#login-modal"
+                      }
+                    },
+                    [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn btn-primary text-weight nav-link",
+                          attrs: {
+                            "data-toggle": "modal",
+                            href: "#",
+                            "data-target": "#login-modal"
+                          }
+                        },
+                        [_vm._v("login")]
+                      )
+                    ]
+                  )
                 ])
               ]
             )
@@ -41695,7 +41826,7 @@ var render = function() {
             }
           ]
         },
-        [_vm._v(" welcome : " + _vm._s(_vm.userName.name))]
+        [_vm._v(" welcome : " + _vm._s(_vm.name.name))]
       ),
       _vm._v(" "),
       _c("router-view", { key: _vm.$route.path })
@@ -41722,58 +41853,6 @@ var staticRenderFns = [
         }
       },
       [_c("span", { staticClass: "navbar-toggler-icon" })]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "li",
-      {
-        staticClass: "nav-item register-btn reg-login-btn",
-        attrs: { "data-toggle": "modal", "data-target": "#register-modal" }
-      },
-      [
-        _c(
-          "a",
-          {
-            staticClass: "btn btn-info nav-link",
-            attrs: {
-              href: "",
-              "data-toggle": "modal",
-              "data-target": "#register-modal"
-            }
-          },
-          [_vm._v("Register")]
-        )
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "li",
-      {
-        staticClass: "nav-item reg-login-btn",
-        attrs: { "data-toggle": "modal", "data-target": "#login-modal" }
-      },
-      [
-        _c(
-          "a",
-          {
-            staticClass: "btn btn-primary text-weight nav-link",
-            attrs: {
-              "data-toggle": "modal",
-              href: "#",
-              "data-target": "#login-modal"
-            }
-          },
-          [_vm._v("login")]
-        )
-      ]
     )
   }
 ]
