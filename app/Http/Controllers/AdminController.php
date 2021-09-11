@@ -13,7 +13,7 @@ class AdminController extends Controller
 {
     //
     public function __construct(){
-       // $this->middleware('admin');
+        $this->middleware('isAdmin');
     }
     public function getPosts(){
         $posts = Post::latest()->with('user','category')->paginate(5);

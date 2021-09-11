@@ -3454,6 +3454,10 @@ var routes = [{
   component: _components_Posts_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
   name: 'Posts'
 }, {
+  path: '/login',
+  component: _components_Posts_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+  name: 'login'
+}, {
   path: '/post/:slug',
   component: _components_PostDetails_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
   name: 'PostDetails'

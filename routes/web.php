@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/login', [App\Http\Controllers\UserController::class, 'login2'])->name('login');
 
 Route::get('/', function () {
     return view('welcome');

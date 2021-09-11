@@ -68,6 +68,11 @@ class UserController extends Controller
         }
     }
 
+    public function login2(Request $request)
+    {
+        return response::json(['login' => 'UnAuthorised']);
+    }
+
     public function details(){  
          //return response::json(['user' =>'user']);
         return response::json(['user' => auth()->user()],200);

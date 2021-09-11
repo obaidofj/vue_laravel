@@ -18,6 +18,7 @@ use App\Http\Controllers\AdminController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('login',[UserController::class,'login']);
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -26,7 +27,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 //Route::get('posts',[PostController::class, 'index']);
 
 
-Route::post('login',[UserController::class,'login']);
+
 
 Route::post('register',[UserController::class,'register']);
 Route::get('checkEmailExist/{email}',[UserController::class,'checkEmailExist']);
